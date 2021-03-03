@@ -1988,16 +1988,16 @@ static char **_build_mail_env(job_record_t *job_ptr, uint32_t mail_type)
 	setenvf(&my_env, "SLURM_MAIL_TYPE", "%s", _mail_type_str(mail_type));
 
 	if (job_ptr->details->std_err)
-		setenvf(&my_env, "SLURM_STDERR", "%s",
+		setenvf(&my_env, "SLURM_JOB_STDERR", "%s",
 			job_ptr->details->std_err);
 	if (job_ptr->details->std_in)
-		setenvf(&my_env, "SLURM_STDIN", "%s",
+		setenvf(&my_env, "SLURM_JOB_STDIN", "%s",
 			job_ptr->details->std_in);
 	if (job_ptr->details->std_out)
-		setenvf(&my_env, "SLURM_STDOUT", "%s",
+		setenvf(&my_env, "SLURM_JOB_STDOUT", "%s",
 			job_ptr->details->std_out);
 	if (job_ptr->details->work_dir)
-		setenvf(&my_env, "SLURM_WORK_DIR", "%s",
+		setenvf(&my_env, "SLURM_JOB_WORK_DIR", "%s",
 			job_ptr->details->work_dir);
 
 	return my_env;
@@ -2084,7 +2084,7 @@ static void _set_job_time(job_record_t *job_ptr, uint16_t mail_type,
 		snprintf(buf, buf_len, ", Queued time ");
 		secs2time_str(interval, buf+14, buf_len-14);
 		secs2time_str(interval, internal_buf, sizeof(internal_buf));
-		setenvf(env, "SLURM_QUEUED_TIME", "%s", internal_buf);
+		setenvf(env, "SLURM_JOB_QUEUED_TIME", "%s", internal_buf);
 		return;
 	}
 
@@ -2099,7 +2099,7 @@ static void _set_job_time(job_record_t *job_ptr, uint16_t mail_type,
 		snprintf(buf, buf_len, ", Run time ");
 		secs2time_str(interval, buf+11, buf_len-11);
 		secs2time_str(interval, internal_buf, sizeof(internal_buf));
-		setenvf(env, "SLURM_RUN_TIME", "%s", internal_buf);
+		setenvf(env, "SLURM_JOB_RUN_TIME", "%s", internal_buf);
 		return;
 	}
 
@@ -2115,7 +2115,7 @@ static void _set_job_time(job_record_t *job_ptr, uint16_t mail_type,
 		snprintf(buf, buf_len, ", Run time ");
 		secs2time_str(interval, buf+11, buf_len-11);
 		secs2time_str(interval, internal_buf, sizeof(internal_buf));
-		setenvf(env, "SLURM_RUN_TIME", "%s", internal_buf);
+		setenvf(env, "SLURM_JOB_RUN_TIME", "%s", internal_buf);
 		return;
 	}
 
@@ -2124,7 +2124,7 @@ static void _set_job_time(job_record_t *job_ptr, uint16_t mail_type,
 		snprintf(buf, buf_len, " time ");
 		secs2time_str(interval, buf + 6, buf_len - 6);
 		secs2time_str(interval, internal_buf, sizeof(internal_buf));
-		setenvf(env, "SLURM_STAGE_OUT_TIME", "%s", internal_buf);
+		setenvf(env, "SLURM_JOB_STAGE_OUT_TIME", "%s", internal_buf);
 		return;
 	}
 }
@@ -2159,26 +2159,26 @@ static void _set_job_term_info(job_record_t *job_ptr, uint16_t mail_type,
 				snprintf(buf, buf_len, ", %s, ExitCode [%d-%d]",
 					 state_string, exit_code_min,
 					 exit_code_max);
-				setenvf(env, "SLURM_EXIT_CODE_MIN", "%d",
+				setenvf(env, "SLURM_JOB_EXIT_CODE_MIN", "%d",
 					exit_code_min);
-				setenvf(env, "SLURM_EXIT_CODE_MAX", "%d",
+				setenvf(env, "SLURM_JOB_EXIT_CODE_MAX", "%d",
 					exit_code_max);
 			} else if (WIFSIGNALED(exit_status_max)) {
 				exit_code_max = WTERMSIG(exit_status_max);
 				snprintf(buf, buf_len, ", %s, MaxSignal [%d]",
 					 "Mixed", exit_code_max);
-				setenvf(env, "SLURM_TERM_SIGNAL_MAX", "%d",
+				setenvf(env, "SLURM_JOB_TERM_SIGNAL_MAX", "%d",
 					exit_code_max);
 			} else if (WIFEXITED(exit_status_max)) {
 				exit_code_max = WEXITSTATUS(exit_status_max);
 				snprintf(buf, buf_len, ", %s, MaxExitCode [%d]",
 					 "Mixed", exit_code_max);
-				setenvf(env, "SLURM_EXIT_CODE_MAX", "%d",
+				setenvf(env, "SLURM_JOB_EXIT_CODE_MAX", "%d",
 					exit_code_max);
 			} else {
 				snprintf(buf, buf_len, ", %s",
 					 job_state_string(base_state));
-				setenvf(env, "SLURM_EXIT_CODE_MAX", "%s", "0");
+				setenvf(env, "SLURM_JOB_EXIT_CODE_MAX", "0");
 			}
 
 			if (job_ptr->array_recs->array_flags &
@@ -2192,12 +2192,12 @@ static void _set_job_term_info(job_record_t *job_ptr, uint16_t mail_type,
 				snprintf(buf, buf_len, ", %s, ExitCode %d",
 					 job_state_string(base_state),
 					 exit_code_max);
-				setenvf(env, "SLURM_EXIT_CODE_MAX", "%d",
+				setenvf(env, "SLURM_JOB_EXIT_CODE_MAX", "%d",
 					exit_code_max);
 			} else {
 				snprintf(buf, buf_len, ", %s",
 					 job_state_string(base_state));
-				setenvf(env, "SLURM_EXIT_CODE_MAX", "%s", "0");
+				setenvf(env, "SLURM_JOB_EXIT_CODE_MAX", "0");
 			}
 		}
 	} else if (buf_len > 0) {

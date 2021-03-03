@@ -2075,16 +2075,16 @@ static void _set_job_time(job_record_t *job_ptr, uint16_t mail_type,
 			  char *buf, int buf_len, char ***env)
 {
 	time_t interval = NO_VAL;
-	char internal_buf[128];
+	int msg_len;
 
 	buf[0] = '\0';
 	if ((mail_type == MAIL_JOB_BEGIN) && job_ptr->start_time &&
 	    job_ptr->details && job_ptr->details->submit_time) {
 		interval = job_ptr->start_time - job_ptr->details->submit_time;
 		snprintf(buf, buf_len, ", Queued time ");
-		secs2time_str(interval, buf+14, buf_len-14);
-		secs2time_str(interval, internal_buf, sizeof(internal_buf));
-		setenvf(env, "SLURM_JOB_QUEUED_TIME", "%s", internal_buf);
+		msg_len = 14;
+		secs2time_str(interval, buf+msg_len, buf_len-msg_len);
+		setenvf(env, "SLURM_JOB_QUEUED_TIME", "%s", buf+msg_len);
 		return;
 	}
 
@@ -2097,9 +2097,9 @@ static void _set_job_time(job_record_t *job_ptr, uint16_t mail_type,
 		} else
 			interval = job_ptr->end_time - job_ptr->start_time;
 		snprintf(buf, buf_len, ", Run time ");
-		secs2time_str(interval, buf+11, buf_len-11);
-		secs2time_str(interval, internal_buf, sizeof(internal_buf));
-		setenvf(env, "SLURM_JOB_RUN_TIME", "%s", internal_buf);
+		msg_len = 11;
+		secs2time_str(interval, buf+msg_len, buf_len-msg_len);
+		setenvf(env, "SLURM_JOB_RUN_TIME", "%s", buf+msg_len);
 		return;
 	}
 
@@ -2113,18 +2113,18 @@ static void _set_job_time(job_record_t *job_ptr, uint16_t mail_type,
 		} else
 			interval = time(NULL) - job_ptr->start_time;
 		snprintf(buf, buf_len, ", Run time ");
-		secs2time_str(interval, buf+11, buf_len-11);
-		secs2time_str(interval, internal_buf, sizeof(internal_buf));
-		setenvf(env, "SLURM_JOB_RUN_TIME", "%s", internal_buf);
+		msg_len = 11;
+		secs2time_str(interval, buf+msg_len, buf_len-msg_len);
+		setenvf(env, "SLURM_JOB_RUN_TIME", "%s", buf+msg_len);
 		return;
 	}
 
 	if ((mail_type == MAIL_JOB_STAGE_OUT) && job_ptr->end_time) {
 		interval = time(NULL) - job_ptr->end_time;
 		snprintf(buf, buf_len, " time ");
-		secs2time_str(interval, buf + 6, buf_len - 6);
-		secs2time_str(interval, internal_buf, sizeof(internal_buf));
-		setenvf(env, "SLURM_JOB_STAGE_OUT_TIME", "%s", internal_buf);
+		msg_len = 11;
+		secs2time_str(interval, buf+msg_len, buf_len-msg_len);
+		setenvf(env, "SLURM_JOB_STAGE_OUT_TIME", "%s", buf+msg_len);
 		return;
 	}
 }

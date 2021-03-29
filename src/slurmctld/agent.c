@@ -2011,8 +2011,8 @@ static void *_mail_proc(void *arg)
 	mail_info_t *mi = (mail_info_t *) arg;
 	int status;
 	char *result = NULL;
-	char *argv[4] = {"mail", "-s", mi->message, mi->user_name};
-
+	char *argv[5] = {
+		slurm_conf.mail_prog, "-s", mi->message, mi->user_name, NULL};
 
 	result = run_command("MailProg", slurm_conf.mail_prog, argv,
 			     mi->environment, MAIL_PROG_TIMEOUT, 0, &status);

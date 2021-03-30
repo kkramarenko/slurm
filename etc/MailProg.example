@@ -34,6 +34,6 @@ showParamIfSet "NodeList" "$SLURM_JOB_NODELIST"
 showParamIfSet "Partition" "$SLURM_JOB_PARTITION"
 showParamIfSet "WorkingDirectory" "$SLURM_JOB_WORK_DIR"
 
-/bin/mail $@ < $MAIL_BODY
+/usr/bin/mail "$@" < $MAIL_BODY
 
 rm $MAIL_BODY

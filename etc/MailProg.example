@@ -25,7 +25,6 @@ case $SLURM_MAIL_TYPE in
 		;;
 esac
 
-echo
 echo "Job details:" >> $MAIL_BODY
 showParamIfSet "User" "$SLURM_JOB_USER"
 showParamIfSet "Account" "$SLURM_JOB_ACCOUNT"

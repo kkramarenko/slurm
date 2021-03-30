@@ -1985,7 +1985,7 @@ static char **_build_mail_env(job_record_t *job_ptr, uint32_t mail_type)
 	setenvf(&my_env, "SLURM_JOB_USER", "%s", name);
 	xfree(name);
 	if (job_ptr->wckey) {
-		setenvf(&my_env, "SLURM_WCKEY", "%s", job_ptr->wckey);
+		setenvf(&my_env, "SLURM_JOB_WCKEY", "%s", job_ptr->wckey);
 	}
 	setenvf(&my_env, "SLURM_MAIL_TYPE", "%s", _mail_type_str(mail_type));
 

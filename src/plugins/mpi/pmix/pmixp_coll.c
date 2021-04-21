@@ -186,19 +186,20 @@ int pmixp_coll_contrib_local(pmixp_coll_t *coll, pmixp_coll_type_t type,
 	PMIXP_DEBUG("%p: %s seq=%d, size=%lu", coll, pmixp_coll_type2str(type),
 		    coll->seq, ndata);
 #endif
-	switch (type) {
-	case PMIXP_COLL_TYPE_FENCE_TREE:
-		ret = pmixp_coll_tree_local(coll, data, ndata,
-					    cbfunc, cbdata);
-		break;
-	case PMIXP_COLL_TYPE_FENCE_RING:
-		ret = pmixp_coll_ring_local(coll, data, ndata,
-					    cbfunc, cbdata);
-		break;
-	default:
-		ret = SLURM_ERROR;
-		break;
-	}
+	ret = coll->coll_contrib_local(coll, data, ndata, cbfunc, cbdata);
+//	switch (type) {
+//	case PMIXP_COLL_TYPE_FENCE_TREE:
+//		ret = pmixp_coll_tree_local(coll, data, ndata,
+//					    cbfunc, cbdata);
+//		break;
+//	case PMIXP_COLL_TYPE_FENCE_RING:
+//		ret = pmixp_coll_ring_local(coll, data, ndata,
+//					    cbfunc, cbdata);
+//		break;
+//	default:
+//		ret = SLURM_ERROR;
+//		break;
+//	}
 
 	return ret;
 }
@@ -232,17 +233,17 @@ int pmixp_coll_init(pmixp_coll_t *coll, pmixp_coll_type_t type,
 	coll->peers_hl = hostlist_copy(hl);
 #endif
 
-	switch(type) {
-	case PMIXP_COLL_TYPE_FENCE_TREE:
-		rc = pmixp_coll_tree_init(coll, &hl);
-		break;
-	case PMIXP_COLL_TYPE_FENCE_RING:
-		rc = pmixp_coll_ring_init(coll, &hl);
-		break;
-	default:
-		PMIXP_ERROR("Unknown coll type");
-		rc = SLURM_ERROR;
-	}
+	//switch(type) {
+	//case PMIXP_COLL_TYPE_FENCE_TREE:
+	//	rc = pmixp_coll_tree_init(coll, &hl);
+	//	break;
+	//case PMIXP_COLL_TYPE_FENCE_RING:
+	//	rc = pmixp_coll_ring_init(coll, &hl);
+	//	break;
+	//default:
+	//	PMIXP_ERROR("Unknown coll type");
+	//	rc = SLURM_ERROR;
+	//}
 	hostlist_destroy(hl);
 	if (rc) {
 		goto exit;
@@ -263,31 +264,31 @@ void pmixp_coll_free(pmixp_coll_t *coll)
 	hostlist_destroy(coll->peers_hl);
 #endif
 	/* check for collective in a not-SYNC state - something went wrong */
-	switch(coll->type) {
-	case PMIXP_COLL_TYPE_FENCE_TREE:
-		if (PMIXP_COLL_TREE_SYNC != coll->state.tree.state)
-			pmixp_coll_log(coll);
+	//switch(coll->type) {
+	//case PMIXP_COLL_TYPE_FENCE_TREE:
+	//	if (PMIXP_COLL_TREE_SYNC != coll->state.tree.state)
+	//		pmixp_coll_log(coll);
 
-		pmixp_coll_tree_free(&coll->state.tree);
-		break;
-	case PMIXP_COLL_TYPE_FENCE_RING:
-	{
-		int i, ctx_in_use = 0;
-		for (i = 0; i < PMIXP_COLL_RING_CTX_NUM; i++) {
-			pmixp_coll_ring_ctx_t *coll_ctx =
-				&coll->state.ring.ctx_array[i];
-			if (coll_ctx->in_use)
-				ctx_in_use++;
-		}
-		if (ctx_in_use)
-			pmixp_coll_log(coll);
-		pmixp_coll_ring_free(&coll->state.ring);
-		break;
-	}
-	default:
-		PMIXP_ERROR("Unknown coll type");
-		break;
-	}
+	//	pmixp_coll_tree_free(&coll->state.tree);
+	//	break;
+	//case PMIXP_COLL_TYPE_FENCE_RING:
+	//{
+	//	int i, ctx_in_use = 0;
+	//	for (i = 0; i < PMIXP_COLL_RING_CTX_NUM; i++) {
+	//		pmixp_coll_ring_ctx_t *coll_ctx =
+	//			&coll->state.ring.ctx_array[i];
+	//		if (coll_ctx->in_use)
+	//			ctx_in_use++;
+	//	}
+	//	if (ctx_in_use)
+	//		pmixp_coll_log(coll);
+	//	pmixp_coll_ring_free(&coll->state.ring);
+	//	break;
+	//}
+	//default:
+	//	PMIXP_ERROR("Unknown coll type");
+	//	break;
+	//}
 	xfree(coll);
 }
 

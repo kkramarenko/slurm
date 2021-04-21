@@ -99,7 +99,10 @@ typedef struct pmixp_coll_s {
 	/* libpmix callback data */
 	void *cbfunc;
 	void *cbdata;
-
+	int (*coll_contrib_local)(pmip_coll_t, pmixp_coll_type_t, char*,
+		size_t, void*, void*);
+	int (*coll_contrib_remote)(pmip_coll_t, pmixp_coll_type_t, char*,
+		size_t, void*, void*);
 	/* timestamp for stale collectives detection */
 	time_t ts, ts_next;
 

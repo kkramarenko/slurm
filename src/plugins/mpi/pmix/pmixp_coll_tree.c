@@ -314,6 +314,7 @@ int pmixp_coll_tree_init(pmixp_coll_t *coll, hostlist_t *hl)
 	_reset_coll_dfwd(coll);
 	coll->cbdata = NULL;
 	coll->cbfunc = NULL;
+	coll->coll_contrib_local = pmixp_coll_tree_local;
 
 	/* init fine grained lock */
 	slurm_mutex_init(&coll->lock);

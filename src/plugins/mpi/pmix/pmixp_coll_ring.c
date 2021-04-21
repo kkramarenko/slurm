@@ -520,7 +520,8 @@ int pmixp_coll_ring_init(pmixp_coll_t *coll, hostlist_t *hl)
 		// TODO bit vector
 		coll_ctx->contrib_map = xmalloc(sizeof(bool) * coll->peers_cnt);
 	}
-
+	
+	coll->coll_contirb_local = pmixp_coll_ring_local;
 	return SLURM_SUCCESS;
 }
 

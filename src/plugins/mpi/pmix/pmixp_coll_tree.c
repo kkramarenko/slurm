@@ -39,13 +39,51 @@
 #include "pmixp_common.h"
 #include "src/slurmd/common/reverse_tree_math.h"
 #include "src/common/slurm_protocol_api.h"
-#include "pmixp_coll.h"
+#include "pmixp_coll_tree.h"
 #include "pmixp_nspaces.h"
 #include "pmixp_server.h"
 #include "pmixp_client.h"
 
 static void _progress_coll_tree(pmixp_coll_t *coll);
 static void _reset_coll(pmixp_coll_t *coll);
+
+static char *
+pmixp_coll_tree_state2str(pmixp_coll_tree_state_t state)
+{
+	switch (state) {
+	case PMIXP_COLL_TREE_SYNC:
+		return "COLL_SYNC";
+	case PMIXP_COLL_TREE_COLLECT:
+		return "COLL_COLLECT";
+	case PMIXP_COLL_TREE_UPFWD:
+		return "COLL_UPFWD";
+	case PMIXP_COLL_TREE_UPFWD_WSC:
+		return "COLL_UPFWD_WAITSND";
+	case PMIXP_COLL_TREE_UPFWD_WPC:
+		return "COLL_UPFWD_WAITPRNT";
+	case PMIXP_COLL_TREE_DOWNFWD:
+		return "COLL_DOWNFWD";
+	default:
+		return "COLL_UNKNOWN";
+	}
+}
+
+static char *
+pmixp_coll_tree_sndstatus2str(pmixp_coll_tree_sndstate_t state)
+{
+	switch (state) {
+	case PMIXP_COLL_TREE_SND_NONE:
+		return "COLL_SND_NONE";
+	case PMIXP_COLL_TREE_SND_ACTIVE:
+		return "COLL_SND_ACTIVE";
+	case PMIXP_COLL_TREE_SND_DONE:
+		return "COLL_SND_DONE";
+	case PMIXP_COLL_TREE_SND_FAILED:
+		return "COLL_SND_FAILED";
+	default:
+		return "COLL_UNKNOWN";
+	}
+}
 
 static int _pack_coll_info(pmixp_coll_t *coll, buf_t *buf)
 {
@@ -276,6 +314,7 @@ int pmixp_coll_tree_init(pmixp_coll_t *coll, hostlist_t *hl)
 	_reset_coll_dfwd(coll);
 	coll->cbdata = NULL;
 	coll->cbfunc = NULL;
+	coll->coll_contrib_local = pmixp_coll_tree_local;
 
 	/* init fine grained lock */
 	slurm_mutex_init(&coll->lock);

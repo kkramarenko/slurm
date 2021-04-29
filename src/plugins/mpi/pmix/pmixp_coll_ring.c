@@ -37,7 +37,7 @@
 
 #include "pmixp_common.h"
 #include "src/common/slurm_protocol_api.h"
-#include "pmixp_coll.h"
+#include "pmixp_coll_ring.h"
 #include "pmixp_nspaces.h"
 #include "pmixp_server.h"
 #include "pmixp_client.h"
@@ -50,6 +50,21 @@ typedef struct {
 } pmixp_coll_ring_cbdata_t;
 
 static void _progress_coll_ring(pmixp_coll_ring_ctx_t *coll_ctx);
+
+static char *
+pmixp_coll_ring_state2str(pmixp_ring_state_t state)
+{
+	switch (state) {
+	case PMIXP_COLL_RING_SYNC:
+		return "COLL_RING_SYNC";
+	case PMIXP_COLL_RING_PROGRESS:
+		return "PMIXP_COLL_RING_PROGRESS";
+	case PMIXP_COLL_RING_FINALIZE:
+		return "PMIXP_COLL_RING_FINILIZE";
+	default:
+		return "COLL_RING_UNKNOWN";
+	}
+}
 
 static inline int _ring_prev_id(pmixp_coll_t *coll)
 {
@@ -505,7 +520,8 @@ int pmixp_coll_ring_init(pmixp_coll_t *coll, hostlist_t *hl)
 		// TODO bit vector
 		coll_ctx->contrib_map = xmalloc(sizeof(bool) * coll->peers_cnt);
 	}
-
+	
+	coll->coll_contirb_local = pmixp_coll_ring_local;
 	return SLURM_SUCCESS;
 }
 

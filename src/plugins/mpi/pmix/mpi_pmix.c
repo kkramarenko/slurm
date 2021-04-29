@@ -220,7 +220,9 @@ extern mpi_plugin_client_state_t *p_mpi_hook_client_prelaunch(
 		PMIXP_ERROR("pmixp_abort_agent_start() failed %d", ret);
 		return NULL;
 	}
-
+	
+	/* Register collectives for specific massage types */
+	
 	PMIXP_DEBUG("setup process mapping in srun");
 	if ((job->het_job_id == NO_VAL) || (job->het_job_task_offset == 0)) {
 		nnodes = job->step_layout->node_cnt;

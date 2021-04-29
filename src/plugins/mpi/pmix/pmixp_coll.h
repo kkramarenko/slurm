@@ -124,5 +124,6 @@ void pmixp_coll_free(pmixp_coll_t *coll);
 void pmixp_coll_localcb_nodata(pmixp_coll_t *coll, int status);
 int pmixp_coll_belong_chk(const pmixp_proc_t *procs, size_t nprocs);
 void pmixp_coll_log(pmixp_coll_t *coll);
+/* Prototype of is_collective function */ 
 
 #endif /* PMIXP_COLL_H */

@@ -200,4 +200,6 @@ typedef struct {
     uint32_t rank;
 } pmixp_proc_t;
 
+/* Collectives initialize structure */
+
 #endif /* PMIXP_COMMON_H */

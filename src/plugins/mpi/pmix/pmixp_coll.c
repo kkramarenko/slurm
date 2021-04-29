@@ -121,6 +121,8 @@ static void pmixp_coll_sanity_check(pmixp_coll_t *coll)
 	xassert(coll->magic == PMIXP_COLL_STATE_MAGIC);
 }
 
+/* Implementation of is_collective function */
+
 int pmixp_coll_check(pmixp_coll_t *coll, uint32_t seq)
 {
 	if (coll->seq == seq) {

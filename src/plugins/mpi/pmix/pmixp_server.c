@@ -774,6 +774,9 @@ unlock:
 static void _process_server_request(pmixp_base_hdr_t *hdr, buf_t *buf)
 {
 	int rc;
+	
+	/* Check if collective needed (delete PMIX_MSG_FAN_IN(OUT), PMIX_MSG_RING)*/
+	/* call is_collective() function */
 
 	switch (hdr->type) {
 	case PMIXP_MSG_FAN_IN:

@@ -54,6 +54,9 @@
 
 #define PMIXP_DEBUG_SERVER 1
 
+pmixp_algo_t algo[ALGO_MAX];
+
+
 /*
  * --------------------- I/O protocol -------------------
  */
@@ -366,10 +369,38 @@ pmixp_p2p_data_t _direct_proto = {
 
 static volatile int _was_initialized = 0;
 
+int pmixp_algo_register(pmixp_algo_type_t type)
+{
+	int rc = SLURM_SUCCESS;
+	switch(type) {
+	case ALGO_TREE:
+		algo[ALGO_TREE].init = pmixp_coll_tree_init;
+		algo[ALGO_TREE].clean = pmixp_coll_tree_free;
+	break;
+	case ALGO_RING:
+		algo[ALGO_RING].init = pmixp_coll_ring_init;
+		algo[ALGO_RING].clean = pmixp_coll_ring_free;
+	break;
+	default:
+		return SLURM_ERROR;
+	}
+	return rc;
+}
+
 int pmixp_stepd_init(const stepd_step_rec_t *job, char ***env)
 {
 	char *path;
 	int fd, rc;
+
+	/* Register init and clean functions for collective operations */
+	if (SLURM_SUCCESS != (rc = pmixp_algo_register(ALGO_TREE))) {
+		PMIXP_ERROR("pmixp_algo_register(type) failed");
+		goto err_info;
+	}
+	if (SLURM_SUCCESS != (rc = pmixp_algo_register(ALGO_RING))) {
+		PMIXP_ERROR("pmixp_algo_register(type) failed");
+		goto err_info;
+	}
 
 	if (SLURM_SUCCESS != (rc = pmixp_info_set(job, env))) {
 		PMIXP_ERROR("pmixp_info_set(job, env) failed");

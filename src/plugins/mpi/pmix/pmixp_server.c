@@ -393,7 +393,7 @@ int pmixp_stepd_init(const stepd_step_rec_t *job, char ***env)
 	int fd, rc;
 
 	/* Register init and clean functions for collective operations */
-	if (SLURM_SUCCESS != (rc = pmixp_algo_register(ALGO_TREE))) {
+	if (SLURM_SUCCESS != (rc = pmixp_coll_tree_register(&algo[ALGO_TREE]))) {
 		PMIXP_ERROR("pmixp_algo_register(type) failed");
 		goto err_info;
 	}

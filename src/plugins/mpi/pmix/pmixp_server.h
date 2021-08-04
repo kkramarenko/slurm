@@ -72,7 +72,7 @@ typedef enum {
 	ALGO_RING,
 	ALGO_TREE,
 	ALGO_MAX
-} pmixp_algo_type_t;
+} pmixp_coll_type_id_t;
 
 typedef struct {
 	int init(void *, void*);

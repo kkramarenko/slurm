@@ -77,7 +77,7 @@ typedef enum {
 typedef struct {
 	int init(void *, void*);
 	void clean(void *);
-} pmixp_algo_t;
+} pmixp_coll_type_desc_t;
 
 typedef void (*pmixp_server_sent_cb_t)(int rc, pmixp_p2p_ctx_t ctx,
 				       void *cb_data);

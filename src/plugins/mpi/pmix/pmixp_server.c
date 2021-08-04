@@ -54,7 +54,7 @@
 
 #define PMIXP_DEBUG_SERVER 1
 
-pmixp_algo_t algo[ALGO_MAX];
+static pmixp_algo_t _pmixp_coll_list[PMIXP_COLL_LIST_MAX];
 
 
 /*

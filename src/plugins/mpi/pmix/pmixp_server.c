@@ -397,7 +397,7 @@ int pmixp_stepd_init(const stepd_step_rec_t *job, char ***env)
 		PMIXP_ERROR("pmixp_algo_register(type) failed");
 		goto err_info;
 	}
-	if (SLURM_SUCCESS != (rc = pmixp_algo_register(ALGO_RING))) {
+	if (SLURM_SUCCESS != (rc = pmixp_coll_ring_register(ALGO_RING))) {
 		PMIXP_ERROR("pmixp_algo_register(type) failed");
 		goto err_info;
 	}

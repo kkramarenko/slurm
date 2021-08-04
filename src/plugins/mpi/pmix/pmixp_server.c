@@ -369,24 +369,6 @@ pmixp_p2p_data_t _direct_proto = {
 
 static volatile int _was_initialized = 0;
 
-int pmixp_algo_register(pmixp_algo_type_t type)
-{
-	int rc = SLURM_SUCCESS;
-	switch(type) {
-	case ALGO_TREE:
-		algo[ALGO_TREE].init = pmixp_coll_tree_init;
-		algo[ALGO_TREE].clean = pmixp_coll_tree_free;
-	break;
-	case ALGO_RING:
-		algo[ALGO_RING].init = pmixp_coll_ring_init;
-		algo[ALGO_RING].clean = pmixp_coll_ring_free;
-	break;
-	default:
-		return SLURM_ERROR;
-	}
-	return rc;
-}
-
 int pmixp_stepd_init(const stepd_step_rec_t *job, char ***env)
 {
 	char *path;
